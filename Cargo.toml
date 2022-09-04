@@ -8,8 +8,8 @@ description = "Pure-Rust PIPO cipher implementation."
 repository = "https://github.com/dustinbraun/pipo/"
 
 [dev-dependencies]
-criterion = "*"
-rand = "*"
+criterion = "0.3.6"
+rand = "0.8.5"
 
 [[bench]]
 name = "plug_out_decrypt"
