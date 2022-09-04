@@ -1,11 +1,8 @@
 use super::add_round_key;
 
 #[inline(always)]
-pub const fn inverse_round(mut state: [u8; 8], round_key: [u8; 8], round: u8) -> [u8; 8] {
-    state = add_round_key(state, round_key, round);
-    state = inverse_rotate(state);
-    state = inverse_s_box(state);
-    state
+pub const fn inverse_round(state: [u8; 8], round_key: [u8; 8], round: u8) -> [u8; 8] {
+    inverse_s_box(inverse_rotate(add_round_key(state, round_key, round)))
 }
 
 #[inline(always)]
@@ -52,12 +49,12 @@ const fn inverse_s_box(mut x: [u8; 8]) -> [u8; 8] {
 
 #[inline(always)]
 const fn inverse_rotate(mut state: [u8; 8]) -> [u8; 8] {
-    state[1] = ((state[1] >> 7)) | ((state[1] << 1));
-    state[2] = ((state[2] >> 4)) | ((state[2] << 4));
-    state[3] = ((state[3] >> 3)) | ((state[3] << 5));
-    state[4] = ((state[4] >> 6)) | ((state[4] << 2));
-    state[5] = ((state[5] >> 5)) | ((state[5] << 3));
-    state[6] = ((state[6] >> 1)) | ((state[6] << 7));
-    state[7] = ((state[7] >> 2)) | ((state[7] << 6));
+    state[1] = state[1].rotate_right(7);
+    state[2] = state[2].rotate_right(4);
+    state[3] = state[3].rotate_right(3);
+    state[4] = state[4].rotate_right(6);
+    state[5] = state[5].rotate_right(5);
+    state[6] = state[6].rotate_right(1);
+    state[7] = state[7].rotate_right(2);
     state
 }
