@@ -21,7 +21,7 @@ fn criterion_benchmark(criterion: &mut Criterion) {
         "plug-out-decrypt128",
         |b| {
             b.iter(|| {
-                let decrypted_data = decrypt128(&KEY, black_box(&ENCRYPTED_DATA));
+                let decrypted_data = decrypt128(KEY, black_box(ENCRYPTED_DATA));
                 assert_eq!(black_box(decrypted_data), black_box(DECRYPTED_DATA));
 
             });

@@ -3,7 +3,7 @@ use super::common::{
     decrypt::inverse_round,
 };
 
-pub fn decrypt256(key: &[u8; 32], data: &[u8; 8]) -> [u8; 8] {
+pub const fn decrypt256(key: [u8; 32], data: [u8; 8]) -> [u8; 8] {
     // Convert from BE to LE format.
     let round_keys: [[u8; 8]; 4] = [
         [ key[31], key[30], key[29], key[28], key[27], key[26], key[25], key[24] ],
@@ -12,24 +12,24 @@ pub fn decrypt256(key: &[u8; 32], data: &[u8; 8]) -> [u8; 8] {
         [ key[ 7], key[ 6], key[ 5], key[ 4], key[ 3], key[ 2], key[ 1], key[ 0] ],
     ];
     let mut state = [ data[7], data[6], data[5], data[4], data[3], data[2], data[1], data[0] ];
-    inverse_round(&mut state, &round_keys[1], 17);
-    inverse_round(&mut state, &round_keys[0], 16);
-    inverse_round(&mut state, &round_keys[3], 15);
-    inverse_round(&mut state, &round_keys[2], 14);
-    inverse_round(&mut state, &round_keys[1], 13);
-    inverse_round(&mut state, &round_keys[0], 12);
-    inverse_round(&mut state, &round_keys[3], 11);
-    inverse_round(&mut state, &round_keys[2], 10);
-    inverse_round(&mut state, &round_keys[1], 9);
-    inverse_round(&mut state, &round_keys[0], 8);
-    inverse_round(&mut state, &round_keys[3], 7);
-    inverse_round(&mut state, &round_keys[2], 6);
-    inverse_round(&mut state, &round_keys[1], 5);
-    inverse_round(&mut state, &round_keys[0], 4);
-    inverse_round(&mut state, &round_keys[3], 3);
-    inverse_round(&mut state, &round_keys[2], 2);
-    inverse_round(&mut state, &round_keys[1], 1);
-    add_round_key(&mut state, &round_keys[0], 0);
+    state = inverse_round(state, round_keys[1], 17);
+    state = inverse_round(state, round_keys[0], 16);
+    state = inverse_round(state, round_keys[3], 15);
+    state = inverse_round(state, round_keys[2], 14);
+    state = inverse_round(state, round_keys[1], 13);
+    state = inverse_round(state, round_keys[0], 12);
+    state = inverse_round(state, round_keys[3], 11);
+    state = inverse_round(state, round_keys[2], 10);
+    state = inverse_round(state, round_keys[1], 9);
+    state = inverse_round(state, round_keys[0], 8);
+    state = inverse_round(state, round_keys[3], 7);
+    state = inverse_round(state, round_keys[2], 6);
+    state = inverse_round(state, round_keys[1], 5);
+    state = inverse_round(state, round_keys[0], 4);
+    state = inverse_round(state, round_keys[3], 3);
+    state = inverse_round(state, round_keys[2], 2);
+    state = inverse_round(state, round_keys[1], 1);
+    state = add_round_key(state, round_keys[0], 0);
     // Convert back from BE to LE format.
     [ state[7], state[6], state[5], state[4], state[3], state[2], state[1], state[0] ]
 }
@@ -47,10 +47,10 @@ mod test {
         const ENCRYPTED_DATA: [u8; 8] = [
             0x81, 0x6D, 0xAE, 0x6F, 0xB6, 0x52, 0x38, 0x89,
         ];
-        const DECRYPTED_DATA: [u8; 8] = [
+        const EXPECTED_DATA: [u8; 8] = [
             0x09, 0x85, 0x52, 0xF6, 0x1E, 0x27, 0x00, 0x26,
         ];
-        let decrypted_data = decrypt256(&KEY, &ENCRYPTED_DATA);
-        assert_eq!(decrypted_data, DECRYPTED_DATA);
+        const DECRYPTED_DATA: [u8; 8] = decrypt256(KEY, ENCRYPTED_DATA);
+        assert_eq!(DECRYPTED_DATA, EXPECTED_DATA);
     }
 }

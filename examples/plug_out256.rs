@@ -11,8 +11,8 @@ fn main() {
     const DATA: [u8; 8] = [
         0x09, 0x85, 0x52, 0xF6, 0x1E, 0x27, 0x00, 0x26,
     ];
-    let encrypted_data = encrypt256(&KEY, &DATA);
-    let decrypted_data = decrypt256(&KEY, &encrypted_data);
+    let encrypted_data = encrypt256(KEY, DATA);
+    let decrypted_data = decrypt256(KEY, encrypted_data);
     assert_eq!(decrypted_data, DATA);
     println!("encrypted: {:?}", encrypted_data);
     println!("decrypted: {:?}", decrypted_data);

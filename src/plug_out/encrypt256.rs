@@ -3,7 +3,7 @@ use super::common::{
     encrypt::round,
 };
 
-pub fn encrypt256(key: &[u8; 32], data: &[u8; 8]) -> [u8; 8] {
+pub const fn encrypt256(key: [u8; 32], data: [u8; 8]) -> [u8; 8] {
     // Convert from BE to LE format.
     let round_keys: [[u8; 8]; 4] = [
         [ key[31], key[30], key[29], key[28], key[27], key[26], key[25], key[24] ],
@@ -12,24 +12,24 @@ pub fn encrypt256(key: &[u8; 32], data: &[u8; 8]) -> [u8; 8] {
         [ key[ 7], key[ 6], key[ 5], key[ 4], key[ 3], key[ 2], key[ 1], key[ 0] ],
     ];
     let mut state = [ data[7], data[6], data[5], data[4], data[3], data[2], data[1], data[0] ];
-    add_round_key(&mut state, &round_keys[0], 0);
-    round(&mut state, &round_keys[1], 1);
-    round(&mut state, &round_keys[2], 2);
-    round(&mut state, &round_keys[3], 3);
-    round(&mut state, &round_keys[0], 4);
-    round(&mut state, &round_keys[1], 5);
-    round(&mut state, &round_keys[2], 6);
-    round(&mut state, &round_keys[3], 7);
-    round(&mut state, &round_keys[0], 8);
-    round(&mut state, &round_keys[1], 9);
-    round(&mut state, &round_keys[2], 10);
-    round(&mut state, &round_keys[3], 11);
-    round(&mut state, &round_keys[0], 12);
-    round(&mut state, &round_keys[1], 13);
-    round(&mut state, &round_keys[2], 14);
-    round(&mut state, &round_keys[3], 15);
-    round(&mut state, &round_keys[0], 16);
-    round(&mut state, &round_keys[1], 17);
+    state = add_round_key(state, round_keys[0], 0);
+    state = round(state, round_keys[1], 1);
+    state = round(state, round_keys[2], 2);
+    state = round(state, round_keys[3], 3);
+    state = round(state, round_keys[0], 4);
+    state = round(state, round_keys[1], 5);
+    state = round(state, round_keys[2], 6);
+    state = round(state, round_keys[3], 7);
+    state = round(state, round_keys[0], 8);
+    state = round(state, round_keys[1], 9);
+    state = round(state, round_keys[2], 10);
+    state = round(state, round_keys[3], 11);
+    state = round(state, round_keys[0], 12);
+    state = round(state, round_keys[1], 13);
+    state = round(state, round_keys[2], 14);
+    state = round(state, round_keys[3], 15);
+    state = round(state, round_keys[0], 16);
+    state = round(state, round_keys[1], 17);
     // Convert back from BE to LE format.
     [ state[7], state[6], state[5], state[4], state[3], state[2], state[1], state[0] ]
 }
@@ -47,10 +47,10 @@ mod test {
         const DATA: [u8; 8] = [
             0x09, 0x85, 0x52, 0xF6, 0x1E, 0x27, 0x00, 0x26,
         ];
-        const ENCRYPTED_DATA: [u8; 8] = [
+        const EXPECTED_DATA: [u8; 8] = [
             0x81, 0x6D, 0xAE, 0x6F, 0xB6, 0x52, 0x38, 0x89,
         ];
-        let encrypted_data = encrypt256(&KEY, &DATA);
-        assert_eq!(encrypted_data, ENCRYPTED_DATA);
+        const ENCRYPTED_DATA: [u8; 8] = encrypt256(KEY, DATA);
+        assert_eq!(ENCRYPTED_DATA, EXPECTED_DATA);
     }
 }

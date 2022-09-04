@@ -1,15 +1,16 @@
 use super::add_round_key;
 
 #[inline(always)]
-pub fn inverse_round(state: &mut [u8; 8], round_key: &[u8; 8], round: u8) {
-    add_round_key(state, round_key, round);
-    inverse_rotate(state);
-    inverse_s_box(state);
+pub const fn inverse_round(mut state: [u8; 8], round_key: [u8; 8], round: u8) -> [u8; 8] {
+    state = add_round_key(state, round_key, round);
+    state = inverse_rotate(state);
+    state = inverse_s_box(state);
+    state
 }
 
 #[inline(always)]
-fn inverse_s_box(x: &mut [u8; 8]) {
-    let mut t: [u8; 8] = [0; 8];
+const fn inverse_s_box(mut x: [u8; 8]) -> [u8; 8] {
+    let mut t: [u8; 4] = [0; 4];
     t[0] = x[7];
     x[7] = x[0];
     x[0] = x[1];
@@ -46,10 +47,11 @@ fn inverse_s_box(x: &mut [u8; 8]) {
     x[1] ^= x[2] | x[0];
     x[0] ^= x[2] | x[1];
     x[2] ^= x[1] & x[0];
+    x
 }
 
 #[inline(always)]
-fn inverse_rotate(state: &mut [u8; 8]) {
+const fn inverse_rotate(mut state: [u8; 8]) -> [u8; 8] {
     state[1] = ((state[1] >> 7)) | ((state[1] << 1));
     state[2] = ((state[2] >> 4)) | ((state[2] << 4));
     state[3] = ((state[3] >> 3)) | ((state[3] << 5));
@@ -57,4 +59,5 @@ fn inverse_rotate(state: &mut [u8; 8]) {
     state[5] = ((state[5] >> 5)) | ((state[5] << 3));
     state[6] = ((state[6] >> 1)) | ((state[6] << 7));
     state[7] = ((state[7] >> 2)) | ((state[7] << 6));
+    state
 }

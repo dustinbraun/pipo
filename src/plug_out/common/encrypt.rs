@@ -1,15 +1,16 @@
 use super::add_round_key;
 
 #[inline(always)]
-pub fn round(state: &mut [u8; 8], round_key: &[u8; 8], round: u8) {
-    s_box(state);
-    rotate(state);
-    add_round_key(state, round_key, round);
+pub const fn round(mut state: [u8; 8], round_key: [u8; 8], round: u8) -> [u8; 8] {
+    state = s_box(state);
+    state = rotate(state);
+    state = add_round_key(state, round_key, round);
+    state
 }
 
 #[inline(always)]
-fn s_box(x: &mut [u8; 8]) {
-    let mut t: [u8; 8] = [0; 8];
+const fn s_box(mut x: [u8; 8]) -> [u8; 8] {
+    let mut t: [u8; 4] = [0; 4];
     x[5] ^= x[7] & x[6];
     x[4] ^= x[3] & x[5];
     x[7] ^= x[4];
@@ -44,10 +45,11 @@ fn s_box(x: &mut [u8; 8]) {
     t[2] = x[4];
     x[4] = x[5];
     x[5] = t[2];
+    x
 }
 
 #[inline(always)]
-fn rotate(state: &mut [u8; 8]) {
+const fn rotate(mut state: [u8; 8]) -> [u8; 8] {
     state[1] = ((state[1] << 7)) | ((state[1] >> 1));
     state[2] = ((state[2] << 4)) | ((state[2] >> 4));
     state[3] = ((state[3] << 3)) | ((state[3] >> 5));
@@ -55,4 +57,5 @@ fn rotate(state: &mut [u8; 8]) {
     state[5] = ((state[5] << 5)) | ((state[5] >> 3));
     state[6] = ((state[6] << 1)) | ((state[6] >> 7));
     state[7] = ((state[7] << 2)) | ((state[7] >> 6));
+    state
 }
