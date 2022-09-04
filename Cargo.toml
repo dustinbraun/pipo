@@ -12,9 +12,17 @@ criterion = "0.3.6"
 rand = "0.8.5"
 
 [[bench]]
-name = "plug_out_decrypt"
+name = "plug_out_decrypt128"
 harness = false
 
 [[bench]]
-name = "plug_out_encrypt"
+name = "plug_out_decrypt256"
+harness = false
+
+[[bench]]
+name = "plug_out_encrypt128"
+harness = false
+
+[[bench]]
+name = "plug_out_encrypt256"
 harness = false

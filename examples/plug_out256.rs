@@ -1,17 +1,18 @@
 use pipo::plug_out::{
-    encrypt,
-    decrypt,
+    encrypt256,
+    decrypt256,
 };
 
 fn main() {
-    const KEY: [u8; 16] = [
+    const KEY: [u8; 32] = [
+        0x00, 0x9A, 0x3A, 0xA4, 0x76, 0xA9, 0x6D, 0xB5, 0x54, 0xA7, 0x12, 0x06, 0x26, 0xD1, 0x56, 0x33,
         0x6D, 0xC4, 0x16, 0xDD, 0x77, 0x94, 0x28, 0xD2, 0x7E, 0x1D, 0x20, 0xAD, 0x2E, 0x15, 0x22, 0x97,
     ];
     const DATA: [u8; 8] = [
         0x09, 0x85, 0x52, 0xF6, 0x1E, 0x27, 0x00, 0x26,
     ];
-    let encrypted_data = encrypt(&KEY, &DATA);
-    let decrypted_data = decrypt(&KEY, &encrypted_data);
+    let encrypted_data = encrypt256(&KEY, &DATA);
+    let decrypted_data = decrypt256(&KEY, &encrypted_data);
     assert_eq!(decrypted_data, DATA);
     println!("encrypted: {:?}", encrypted_data);
     println!("decrypted: {:?}", decrypted_data);
