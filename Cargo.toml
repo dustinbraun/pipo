@@ -1,0 +1,20 @@
+[package]
+name = "pipo"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+keywords = [ "pipo", "cipher", "encryption" ]
+description = "Pure-Rust PIPO cipher implementation."
+repository = "https://github.com/dustinbraun/pipo/"
+
+[dev-dependencies]
+criterion = "*"
+rand = "*"
+
+[[bench]]
+name = "plug_out_decrypt"
+harness = false
+
+[[bench]]
+name = "plug_out_encrypt"
+harness = false
